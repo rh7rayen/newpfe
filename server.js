@@ -10,6 +10,7 @@ const corsOptions = {
   optionSuccessStatus: 200,
 };
 app.use(cors(corsOptions));
+app.use(express.static("public"));
 
 // Connexion à la base de données MongoDB
 const url = "mongodb://localhost:27017/pfe";
