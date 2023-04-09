@@ -51,6 +51,9 @@ const SideNav = () => {
               <Link to="/classe" className="nav-link">
                 Gestion classe
               </Link>
+              <Link to="/GestionEvent" className="nav-link">
+                GESTION ÉVÉNEMENT{" "}
+              </Link>
             </li>
           </ul>
         </nav>

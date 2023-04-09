@@ -2,8 +2,8 @@ import React, { useState, useEffect } from "react";
 import http from "../../../api/http";
 import Swal from "sweetalert2";
 import { Link } from "react-router-dom";
-import UpdateLavel from "../level/UpdateLavel";
-const TableClasse = () => {
+
+const TableMatiere = (props) => {
   const [data, setData] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
 
@@ -16,17 +16,18 @@ const TableClasse = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const { data: fetchedClasses } = await http.get(
-          "http://localhost:5000/api/adminController/getallclasse"
+        const { data: fetchedData } = await http.get(
+          `http://localhost:5000/api/adminController/getAllSubject/${props.id}`
         );
-        setData(fetchedClasses);
+        setData(fetchedData);
       } catch (error) {
         console.error(error);
       }
     };
 
-    return () => fetchData();
+    fetchData();
   }, [data]);
+
   const onDelete = (id) => {
     Swal.fire({
       title: "Are you sure?",
@@ -36,18 +37,20 @@ const TableClasse = () => {
       confirmButtonColor: "#3085d6",
       cancelButtonColor: "#d33",
       confirmButtonText: "Yes, delete it!",
-    }).then((result) => {
+    }).then(async (result) => {
       if (result.isConfirmed) {
-        Swal.fire("Deleted!", "Your file has been deleted.", "success");
-        http.delete(
-          `http://localhost:5000/api/adminController/deleteClasse/${id}`
+        await http.delete(
+          `http://localhost:5000/api/adminController/deleteSubject/${id}`
         );
+        Swal.fire("Deleted!", "Your file has been deleted.", "success");
+        setData(data.filter((row) => row._id !== id));
       }
     });
   };
+
   // Filter data based on search query
   const filteredData = data.filter((row) =>
-    row.classeName.toLowerCase().includes(searchQuery.toLowerCase())
+    row.subjectName.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
   return (
@@ -64,36 +67,26 @@ const TableClasse = () => {
       <table className="table">
         <thead>
           <tr>
-            <th>Non de mariére</th>
+            <th>Non de matiére</th>
           </tr>
         </thead>
         <tbody>
           {filteredData.map((row) => (
-            <tr key={row.id}>
-              <td>{row.classeName}</td>
+            <tr key={row._id}>
+              <td>{row.subjectName}</td>
               <td>
-                <Link
+                <button
                   className="btn btn-danger"
                   onClick={() => onDelete(row._id)}
                 >
                   Supprimer
-                </Link>
+                </button>
               </td>
               <td>
-                {" "}
-                <Link
-                  className="btn btn-info"
-                  to={`/ajouterStudent/${row._id}`}
-                >
-                  ajouter des éleves
+                <Link className="btn btn-primary" to={`/Semaistre`}>
+                  modifier{" "}
                 </Link>
               </td>
-              <td>
-                <Link className="btn btn-primary" to={`/Subject/${row._id}`}>
-                  ajouter des matiéres
-                </Link>
-              </td>
-              <td></td>
             </tr>
           ))}
         </tbody>
@@ -102,4 +95,4 @@ const TableClasse = () => {
   );
 };
 
-export default TableClasse;
+export default TableMatiere;

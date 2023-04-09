@@ -1,10 +1,26 @@
 import React, { useState, useEffect } from "react";
 import http from "../../../api/http";
 import { Link } from "react-router-dom";
+
 import Swal from "sweetalert2";
-const TableLevel = () => {
+import UpdateLavel from "./UpdateLavel";
+
+const TableLevel = ({ navigate }) => {
   const [data, setData] = useState([]);
+  const [udata, setUdata] = useState({ levelName: "", year: "" });
+  const [classes, setClasses] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
+
+  const onUpdate = async (id) => {
+    try {
+      const { data: fetchedClasses } = await http.get(
+        "http://localhost:5000/api/adminController/getLavelById/" + id
+      );
+      setUdata(fetchedClasses);
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
   // Define handleChange function to update searchQuery state
   const handleChange = (e) => {
@@ -19,14 +35,18 @@ const TableLevel = () => {
           "http://localhost:5000/api/adminController/getLavel"
         );
         setData(fetchedClasses);
+
+        // Call navigate function here, after data has been set
+        if (typeof navigate === "function") {
+          navigate("/classe");
+        }
       } catch (error) {
         console.error(error);
       }
     };
-    console.log(data);
-
     fetchData();
-  }, [data]);
+  }, [data, navigate]);
+
   const onDelete = (id) => {
     Swal.fire({
       title: "Are you sure?",
@@ -55,7 +75,7 @@ const TableLevel = () => {
   return (
     <div className="container mt-3">
       {/* Add onChange handler to update search query */}
-
+      <UpdateLavel data={udata} />
       <br />
       <table className="table">
         <thead>
@@ -80,6 +100,17 @@ const TableLevel = () => {
                   ajouter un classe
                 </Link>
               </td>
+              <td>
+                <Link
+                  className="btn btn-info"
+                  onClick={() => onUpdate(row._id)}
+                  data-toggle="modal"
+                  data-target="#exampleModalLong"
+                >
+                  modifier
+                </Link>
+              </td>
+              <td></td>
             </tr>
           ))}
         </tbody>

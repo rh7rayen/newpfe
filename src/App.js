@@ -10,6 +10,10 @@ import LevelUpdate from "./component/admincomponent/updateLavel";
 import AddClasse from "./component/admincomponent/classe/AddClasse";
 import AddEleve from "./component/admincomponent/eleve/AddEleve";
 import Profile from "./component/admincomponent/profile/Profile";
+import Semaistre from "./component/admincomponent/matiere/Semaistre";
+import AddMatiere from "./component/admincomponent/matiere/AddMatiere";
+import GestionEvent from "./component/admincomponent/event/GestionEvent";
+import UpdateEvent from "./component/admincomponent/event/UpdateEvent";
 function App() {
   const [user, setUser] = useState(null);
 
@@ -43,6 +47,13 @@ function App() {
                   element={<AddEleve />}
                 />
                 <Route exact path="/Profile" element={<Profile />} />
+                <Route exact path="/Subject/:id" element={<AddMatiere />} />
+                <Route exact path="/GestionEvent" element={<GestionEvent />} />
+                <Route
+                  exact
+                  path="/UpdateEvent/:id"
+                  element={<UpdateEvent />}
+                />
               </>
             )}
             <Route path="*" element={<NotFound />} />
